@@ -7,6 +7,17 @@ import { compareVersions, runWithSpinner, buildCli, parseCookieOption, shouldInf
 import { dataDir } from '../src/paths.js';
 import { skillWithFrontmatter } from '../src/skill.js';
 
+test('scheduled sync credentials are complete, validated and never echoed in errors', () => {
+  assert.deepEqual(parseCookieOption(undefined, {}), {});
+  assert.deepEqual(parseCookieOption(undefined, { FT_X_CSRF_TOKEN: 'abc123', FT_X_AUTH_TOKEN: 'def456' }),
+    { csrfToken: 'abc123', cookieHeader: 'ct0=abc123; auth_token=def456' });
+  assert.throws(() => parseCookieOption(undefined, { FT_X_CSRF_TOKEN: 'privatevalue' }),
+    (error: Error) => !error.message.includes('privatevalue') && error.message.includes('must both'));
+  assert.throws(() => parseCookieOption(undefined, { FT_X_CSRF_TOKEN: 'abc; extra=1', FT_X_AUTH_TOKEN: 'def' }));
+  assert.deepEqual(parseCookieOption(['explicit', 'token'], { FT_X_CSRF_TOKEN: 'partial' }),
+    { csrfToken: 'explicit', cookieHeader: 'ct0=explicit; auth_token=token' });
+});
+
 async function captureStdout(fn: () => Promise<void>): Promise<string> {
   const chunks: string[] = [];
   const origWrite = process.stdout.write;
