@@ -103,10 +103,10 @@ test('ft search, stats, and status expose --json', () => {
   }
 });
 
-test('ft paths, current, state, recent, navigation aliases, library, commands, app, and install command groups are registered', () => {
+test('ft paths, current, recent, navigation aliases, library, commands, app, and install command groups are registered', () => {
   const program = buildCli();
   for (const name of [
-    'paths', 'current', 'state', 'recent', 'ls', 'tree', 'find', 'grep', 'cat', 'head',
+    'paths', 'current', 'recent', 'ls', 'tree', 'find', 'grep', 'cat', 'head',
     'meta', 'open', 'tab', 'reveal', 'pwd', 'context', 'link', 'links', 'backlinks',
     'tags', 'tagged', 'new', 'append', 'note', 'rename', 'cd', 'back',
     'library', 'commands', 'app', 'install',
